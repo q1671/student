@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>招聘网站数据集 | 学习平台</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href=" " class="back-btn">← 返回首页</a >
+
+        <h2>招聘网站数据集</h2>
+        <p style="color:#94a3b8;margin:10px 0;">岗位、薪资、行业数据统计</p >
+
+        <div class="quiz-box">
+            <h3>选择题：分组统计数据使用Pandas哪个函数？</h3>
+            <div class="quiz-options">
+                <label><input type="radio" name="q1" value="A"> A. sort_values()</label>
+                <label><input type="radio" name="q1" value="B"> B. groupby()</label>
+                <label><input type="radio" name="q1" value="C"> C. dropna()</label>
+                <label><input type="radio" name="q1" value="D"> D. head()</label>
+            </div>
+            <button class="quiz-submit" onclick="checkAnswer()">提交答案</button>
+            <div class="quiz-result" id="quizResult"></div>
+        </div>
+
+        <div class="code-box">
+            <h3>代码题：计算不同岗位&经验平均薪资</h3>
+            <textarea id="codeEditor">import pandas as pd
+df = pd.DataFrame({
+    "岗位":["数据分析","运营","数据分析","运营"],
+    "经验":["1-3年","应届生","1-3年","应届生"],
+    "薪资":[6800,5100,7000,5300]
+})
+print("招聘数据：")
+print(df)
+print("\n不同岗位&经验平均薪资：")
+print(df.groupby(["岗位","经验"])["薪资"].mean())</textarea>
+            <button class="run-btn" onclick="runCode('codeEditor','outputArea')">运行代码</button>
+            <div id="outputArea" class="output">运行结果将展示在这里</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script src="../js/run.js"></script>
+    <script>
+        function checkAnswer() {
+            const selected = document.querySelector('input[name="q1"]:checked');
+            const result = document.getElementById('quizResult');
+            if (!selected) {
+                result.innerText = "请选择一个选项";
+                result.style.color = "#f87171";
+                return;
+            }
+            if (selected.value === "B") {
+                result.innerText = "回答正确！✅";
+                result.style.color = "#4ade80";
+            } else {
+                result.innerText = "回答错误，正确答案是 B. groupby()";
+                result.style.color = "#f87171";
+            }
+        }
+    </script>
+</body>
+</html>

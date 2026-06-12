@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python基础 | 蔡欣淇 学习平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #1a1a2e;
+            color: #e2e8f0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            color: #4dabf7;
+            text-decoration: underline;
+            cursor: pointer;
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 9999;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .header-info {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-info h1 {
+            color: #4dabf7;
+            margin-bottom: 10px;
+        }
+
+        .course-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-box {
+            background-color: #0f0f1a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .quiz-submit {
+            background-color: #059669;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .quiz-result {
+            margin-top: 10px;
+        }
+
+        .code-box {
+            background-color: #0f0f1a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            background-color: #000;
+            color: #4ade80;
+            border: none;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            resize: vertical;
+            outline: none;
+        }
+
+        .run-btn {
+            background-color: #4dabf7;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .output {
+            margin-top: 20px;
+            background-color: #0f0f1a;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 80px;
+            white-space: pre-wrap;
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href=" " class="back-btn">← 返回首页</a >
+
+        <div class="header-info">
+            <h1>蔡欣淇</h1>
+            <p>广东科学技术职业学院 · 商务数据分析与应用专业</p >
+        </div>
+
+        <div class="course-title">
+            <h2>Python 基础 — 在线代码练习</h2>
+            <p>在此编写、修改并运行Python代码，练习基础语法。</p >
+        </div>
+
+        <div class="quiz-box">
+            <h3>选择题：以下哪个不是Python的数据类型？</h3>
+            <div class="quiz-options">
+                <label><input type="radio" name="q1" value="A"> A. list</label>
+                <label><input type="radio" name="q1" value="B"> B. int</label>
+                <label><input type="radio" name="q1" value="C"> C. char</label>
+                <label><input type="radio" name="q1" value="D"> D. tuple</label>
+            </div>
+            <button class="quiz-submit" onclick="checkAnswer()">提交答案</button>
+            <div class="quiz-result" id="quiz-result"></div>
+        </div>
+
+        <div class="code-box">
+            <h3>代码题：输出1到5的数字</h3>
+            <textarea id="codeEditor">姓名 = "蔡欣淇"
+专业 = "商务数据分析与应用"
+print(f"姓名: {姓名}")
+print(f"专业: {专业}")
+
+数字列表 = [12, 25, 36, 48, 55]
+总和 = sum(数字列表)
+平均值 = 总和 / len(数字列表)
+print(f"数字列表总和: {总和}")
+print(f"数字列表平均值: {平均值}")</textarea>
+            <button class="run-btn" onclick="runCode()">运行代码</button>
+        </div>
+
+        <div class="output" id="output">代码运行结果将显示在这里......</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+        let pyodideEnv;
+
+        async function initPyodide() {
+            pyodideEnv = await loadPyodide();
+            await pyodideEnv.loadPackage(["pandas", "numpy"]);
+        }
+
+        async function runCode() {
+            const codeText = document.getElementById('codeEditor').value;
+            const outDom = document.getElementById('output');
+            outDom.innerText = "运行中，请稍等...";
+
+            try {
+                pyodideEnv.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+                `);
+                await pyodideEnv.runPythonAsync(codeText);
+                const result = pyodideEnv.runPython("sys.stdout.getvalue()");
+                outDom.innerText = result || "执行完成，无输出内容";
+            } catch (err) {
+                outDom.innerText = "运行报错：\n" + err.message;
+            }
+        }
+
+        function checkAnswer() {
+            const options = document.getElementsByName('q1');
+            let selected = null;
+            for (const opt of options) {
+                if (opt.checked) {
+                    selected = opt.value;
+                    break;
+                }
+            }
+            const resultDiv = document.getElementById('quiz-result');
+            if (!selected) {
+                resultDiv.innerText = "请选择一个选项";
+                resultDiv.style.color = "#f87171";
+                return;
+            }
+            if (selected === "C") {
+                resultDiv.innerText = "回答正确！✅";
+                resultDiv.style.color = "#4ade80";
+            } else {
+                resultDiv.innerText = "回答错误，正确答案是C（Python中没有char类型，单个字符用str表示）";
+                resultDiv.style.color = "#f87171";
+            }
+        }
+
+        window.onload = initPyodide;
+    </script>
+</body>
+</html>

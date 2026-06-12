@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python基础 | 学习平台</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 正确返回首页路径 -->
+        <a href=" " class="back-btn">← 返回首页</a >
+
+        <h2>Python 基础</h2>
+        <p style="color:#94a3b8;margin:10px 0;">Python语法、变量、循环、函数入门练习</p >
+
+        <div class="quiz-box">
+            <h3>选择题：以下哪个不是Python的数据类型？</h3>
+            <div class="quiz-options">
+                <label><input type="radio" name="q1" value="A"> A. list</label>
+                <label><input type="radio" name="q1" value="B"> B. int</label>
+                <label><input type="radio" name="q1" value="C"> C. char</label>
+                <label><input type="radio" name="q1" value="D"> D. tuple</label>
+            </div>
+            <button class="quiz-submit" onclick="checkAnswer()">提交答案</button>
+            <div class="quiz-result" id="quizResult"></div>
+        </div>
+
+        <div class="code-box">
+            <h3>代码题：编写程序输出1到5的数字</h3>
+            <textarea id="codeEditor">for i in range(1,6):
+    print(i)</textarea>
+            <button class="run-btn" onclick="runCode('codeEditor','outputArea')">运行代码</button>
+            <div id="outputArea" class="output">运行结果将展示在这里</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script src="../js/run.js"></script>
+    <script>
+        function checkAnswer() {
+            const selected = document.querySelector('input[name="q1"]:checked');
+            const result = document.getElementById('quizResult');
+            if (!selected) {
+                result.innerText = "请选择一个选项";
+                result.style.color = "#f87171";
+                return;
+            }
+            if (selected.value === "C") {
+                result.innerText = "回答正确！✅";
+                result.style.color = "#4ade80";
+            } else {
+                result.innerText = "回答错误，正确答案是 C. char（Python无单独char类型）";
+                result.style.color = "#f87171";
+            }
+        }
+    </script>
+</body>
+</html>
